@@ -1,19 +1,53 @@
 import sys
+import os
+import numpy as np
+import pandas as pd
+from sqlalchemy import create_engine
 
 
 def load_data(messages_filepath, categories_filepath):
-    pass
+    # Get current working directory
+    cwd = os.getcwd()
+
+    # Import both "messages" and "categories" file from csv
+    messages = pd.read_csv(os.path.join(cwd,messages_filepath))
+    categories = pd.read_csv(os.path.join(cwd,categories_filepath))
+
+    # merge both csv-files into DataFrame and return 
+    return pd.merge(messages, categories, on="id")
 
 
 def clean_data(df):
-    pass
+    # Delimit column "categories" into multiple columns and rename column names
+    categories = df["categories"].str.split(";",expand=True)
+    categories.columns = categories.iloc[0].str.split("-", expand=True)[0]
+    
+    # Convert all values in the delimited columns into int-type 
+    categories = categories.applymap(lambda x: int(x.split("-")[-1]))
+
+    # drop the original categories column from `df`
+    df = df.drop(columns="categories")
+
+    # concatenate the original dataframe with the new `categories` dataframe
+    df = pd.concat([df, categories], axis=1)
+
+    # drop duplicates
+    df = df.drop_duplicates()
+
+    # Add-on: replace '2' in column "related" with '1'
+    df["related"] = df["related"].replace(2,1)
+    
+    return df
 
 
 def save_data(df, database_filename):
-    pass  
+    # Save the clean dataset into an sqlite database
+    engine = create_engine(f'sqlite:///{database_filename}')
+    df.to_sql("DisasterResponse", engine, index=False)
 
 
 def main():
+
     if len(sys.argv) == 4:
 
         messages_filepath, categories_filepath, database_filepath = sys.argv[1:]
