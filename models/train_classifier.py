@@ -1,13 +1,37 @@
 import sys
+import pandas as pd
+import numpy as np
+from sqlalchemy import create_engine
 
+from nltk.stem import WordNetLemmatizer
+from nltk.tokenize import RegexpTokenizer
+
+from sklearn.pipeline import Pipeline, FeatureUnion
+from sklearn.model_selection import train_test_split, GridSearchCV
+from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer, HashingVectorizer
+from sklearn.multioutput import MultiOutputClassifier
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import classification_report
+import joblib
+sys.modules['sklearn.externals.joblib'] = joblib
 
 def load_data(database_filepath):
-    pass
+    engine = create_engine(f"sqlite:///{database_filepath}")
+    df = pd.read_sql_table('DisasterResponse', engine)  
+    
+    X = df["message"]
+    Y = df.iloc[:,-36:]
+    category_names = Y.columns
+    
+    return X, Y, category_names
 
 
 def tokenize(text):
-    tokens = word_tokenize(text)
+    tokenizer = RegexpTokenizer(r'\w+')
     lemmatizer = WordNetLemmatizer()
+
+    tokens = tokenizer.tokenize(text)
 
     clean_tokens = []
     for tok in tokens:
@@ -18,15 +42,24 @@ def tokenize(text):
 
 
 def build_model():
-    pass
+    pipeline =  Pipeline([
+                ('vect', CountVectorizer(tokenizer=tokenize)),
+                ('tfidf', TfidfTransformer()),
+                ('clf', MultiOutputClassifier(DecisionTreeClassifier()))
+                ])
+    
+    return pipeline
 
 
 def evaluate_model(model, X_test, Y_test, category_names):
-    pass
+    Y_pred = model.predict(X_test)
+    Y_pred = pd.DataFrame(Y_pred, columns=category_names)
+
+    print(classification_report(Y_test.values, Y_pred.values, target_names=category_names))
 
 
 def save_model(model, model_filepath):
-    pass
+    joblib.dump(model, model_filepath)
 
 
 def main():
@@ -39,7 +72,7 @@ def main():
         print('Building model...')
         model = build_model()
         
-        print('Training model...')
+        print('Training model...(this might take up to 10 minutes)')
         model.fit(X_train, Y_train)
         
         print('Evaluating model...')

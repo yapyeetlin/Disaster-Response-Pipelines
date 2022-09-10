@@ -1,22 +1,26 @@
 import json
 import plotly
 import pandas as pd
+import sys
 
 from nltk.stem import WordNetLemmatizer
-from nltk.tokenize import word_tokenize
+from nltk.tokenize import RegexpTokenizer
 
 from flask import Flask
 from flask import render_template, request, jsonify
 from plotly.graph_objs import Bar
-from sklearn.externals import joblib
+import joblib
+sys.modules['sklearn.externals.joblib'] = joblib
 from sqlalchemy import create_engine
 
 
 app = Flask(__name__)
 
 def tokenize(text):
-    tokens = word_tokenize(text)
+    tokenizer = RegexpTokenizer(r'\w+')
     lemmatizer = WordNetLemmatizer()
+
+    tokens = tokenizer.tokenize(text)
 
     clean_tokens = []
     for tok in tokens:
@@ -25,12 +29,13 @@ def tokenize(text):
 
     return clean_tokens
 
+
 # load data
-engine = create_engine('sqlite:///../data/YourDatabaseName.db')
-df = pd.read_sql_table('YourTableName', engine)
+engine = create_engine('sqlite:///../data/DisasterResponse.db')
+df = pd.read_sql_table('DisasterResponse', engine)
 
 # load model
-model = joblib.load("../models/your_model_name.pkl")
+model = joblib.load("../models/classifier.pkl")
 
 
 # index webpage displays cool visuals and receives user input text for model
