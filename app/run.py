@@ -5,6 +5,8 @@ import sys
 
 from nltk.stem import WordNetLemmatizer
 from nltk.tokenize import RegexpTokenizer
+import nltk
+nltk.download('wordnet')
 
 from flask import Flask
 from flask import render_template, request, jsonify
@@ -14,7 +16,7 @@ sys.modules['sklearn.externals.joblib'] = joblib
 from sqlalchemy import create_engine
 
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder='templates')
 
 def tokenize(text):
     tokenizer = RegexpTokenizer(r'\w+')
@@ -52,7 +54,8 @@ def index():
     # TODO: Below is an example - modify to create your own visuals
     graphs = [
         {
-            'data': [
+            'data': 
+            [
                 Bar(
                     x=genre_names,
                     y=genre_counts

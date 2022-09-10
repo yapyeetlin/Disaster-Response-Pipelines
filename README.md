@@ -1,6 +1,6 @@
 # Disaster Response Pipeline Project
 
-## Instructions:
+## Instructions
 0. Install the required packages *(optional if done once)*<br>
 
     - From requirements.txt file with the command:<br>
@@ -13,7 +13,34 @@
     - To run ML pipeline that trains classifier and saves:<br>
         `python models/train_classifier.py data/DisasterResponse.db models/classifier.pkl`
 
-2. Run the following command in the app's directory to run your web app.<br>
-    `python run.py`
+2. Run the following command in the workspace directory to run your web app.<br>
+    `cd app` -> `python run.py`
 
-3. Go to http://0.0.0.0:3001/
+3. Go to http://localhost:3001/
+
+
+## About
+This project is made as course fulfillment for Udacity's Data Scientist Nanodegree Program in collaboration with Bosch AI Talent Accelerator Scholarship Program.
+
+
+## Workspace Description
+~~~
+        disaster_response_pipeline
+        |-- app                            
+            |-- templates                   //html files for the web application
+                |-- go.html
+                |-- master.html
+            |-- run.py                      //Flask file to run the web application
+        |-- data
+            |-- disaster_messages.csv       // text data for disaster messages
+            |-- disaster_categories.csv     // category data for disaster messages
+            |-- DisasterResponse.db         // output of the ETL pipeline
+            |-- process_data.py             // script for ETL pipeline
+        |-- models
+            |-- classifier.pkl              //classifier model serialized in pickle
+            |-- train_classifier.py         //script for ML pipeline
+        |-- requirements.txt  
+        |-- README
+        |-- Screenshots
+        |-- .archives                       // misc. files for data science activities
+~~~

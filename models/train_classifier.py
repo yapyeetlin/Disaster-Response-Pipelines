@@ -5,6 +5,8 @@ from sqlalchemy import create_engine
 
 from nltk.stem import WordNetLemmatizer
 from nltk.tokenize import RegexpTokenizer
+import nltk
+nltk.download('wordnet')
 
 from sklearn.pipeline import Pipeline, FeatureUnion
 from sklearn.model_selection import train_test_split, GridSearchCV
