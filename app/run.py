@@ -10,7 +10,7 @@ nltk.download('wordnet')
 
 from flask import Flask
 from flask import render_template, request, jsonify
-from plotly.graph_objs import Bar
+from plotly.graph_objs import Bar, Pie
 import joblib
 sys.modules['sklearn.externals.joblib'] = joblib
 from sqlalchemy import create_engine
@@ -50,6 +50,9 @@ def index():
     genre_counts = df.groupby('genre').count()['message']
     genre_names = list(genre_counts.index)
     
+    topic_count = pd.DataFrame(df.iloc[:,5:].sum().sort_values(ascending=False), columns=["count"])
+    topic_names = list(topic_count.index)
+
     # create visuals
     # TODO: Below is an example - modify to create your own visuals
     graphs = [
@@ -69,6 +72,25 @@ def index():
                 },
                 'xaxis': {
                     'title': "Genre"
+                }
+            }
+        },
+        {
+            'data': 
+            [
+                Bar(
+                    x=topic_names,
+                    y=topic_count["count"] / len(df) * 100
+                )
+            ],
+
+            'layout': {
+                'title': 'Distribution of Topics in %',
+                'yaxis': {
+                    'title': "Percentage"
+                },
+                'xaxis': {
+                    'title': "Topic"
                 }
             }
         }

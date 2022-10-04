@@ -20,7 +20,7 @@
 
 
 ## About
-This project is made as course fulfillment for Udacity's Data Scientist Nanodegree Program in collaboration with Bosch AI Talent Accelerator Scholarship Program.
+This project is made as part of course fulfillment for Udacity's Data Scientist Nanodegree Program in collaboration with Bosch AI Talent Accelerator Scholarship Program.
 
 
 ## Workspace Description
