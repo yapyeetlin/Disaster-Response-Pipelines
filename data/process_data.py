@@ -43,7 +43,7 @@ def clean_data(df):
 def save_data(df, database_filename):
     # Save the clean dataset into an sqlite database
     engine = create_engine(f'sqlite:///{database_filename}')
-    df.to_sql("DisasterResponse", engine, index=False)
+    df.to_sql("DisasterResponse", engine, index=False, if_exists='replace')
 
 
 def main():

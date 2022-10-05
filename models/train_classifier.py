@@ -50,7 +50,12 @@ def build_model():
                 ('clf', MultiOutputClassifier(DecisionTreeClassifier()))
                 ])
     
-    return pipeline
+    parameters = {'clf__estimator__max_depth': [5,10,20],
+                'clf__estimator__min_samples_leaf': [10,20,50]}
+    
+    cv = GridSearchCV(pipeline, parameters, n_jobs=-1, verbose=3)
+
+    return cv
 
 
 def evaluate_model(model, X_test, Y_test, category_names):
@@ -61,7 +66,7 @@ def evaluate_model(model, X_test, Y_test, category_names):
 
 
 def save_model(model, model_filepath):
-    joblib.dump(model, model_filepath)
+    joblib.dump(model.best_estimator_, model_filepath)
 
 
 def main():
