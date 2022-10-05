@@ -21,7 +21,7 @@
 
 ## About
 This project creates a web-based tool, powered by NLP & machine learning techniques, to assist in classifying emergency messages in case of a disaster. 
-This tool enables workers from the emergency frontlines, for example NGOs and humanitarian teams, to precisely extract and classify important keywords from emergency messages.
+This tool enables workers from the emergency frontliners, for example NGOs and humanitarian teams, to precisely extract and classify important keywords from emergency messages.
 Visuals shown in this tool also help them to better, quicker allocating and prioritising resources during rescue activities.     
 
 This project is created as part of course fulfillment for Udacity's Data Scientist Nanodegree Program in collaboration with Bosch AI Talent Accelerator Scholarship Program.
