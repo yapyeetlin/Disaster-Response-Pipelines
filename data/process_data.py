@@ -6,6 +6,17 @@ from sqlalchemy import create_engine
 
 
 def load_data(messages_filepath, categories_filepath):
+    '''
+    load_data
+    Load messages and categories from csv files and merge them as a single DataFrame
+
+    Input:
+    messages_filepath       -> Filepath where the messages.csv is stored
+    categories_filepath     -> Filepath where the categories.csv is stored
+
+    Output:
+    A single merged DataFrame
+    ''' 
     # Get current working directory
     cwd = os.getcwd()
 
@@ -18,6 +29,16 @@ def load_data(messages_filepath, categories_filepath):
 
 
 def clean_data(df):
+    '''
+    clean_data
+    Clean DataFrame by reshaping the categories and drop duplicates
+
+    Input:
+    df          -> DataFrame to be cleaned
+
+    Output:
+    Cleaned DataFrame with no duplicates
+    ''' 
     # Delimit column "categories" into multiple columns and rename column names
     categories = df["categories"].str.split(";",expand=True)
     categories.columns = categories.iloc[0].str.split("-", expand=True)[0]
@@ -41,6 +62,17 @@ def clean_data(df):
 
 
 def save_data(df, database_filename):
+    '''
+    save_data
+    Save dataframe into SQL database
+
+    Input:
+    df                  -> DataFrame to be stored
+    database_filename   -> location where the database is saved
+
+    Output:
+    None
+    ''' 
     # Save the clean dataset into an sqlite database
     engine = create_engine(f'sqlite:///{database_filename}')
     df.to_sql("DisasterResponse", engine, index=False, if_exists='replace')

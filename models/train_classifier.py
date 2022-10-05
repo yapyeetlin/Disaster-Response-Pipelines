@@ -19,6 +19,18 @@ import joblib
 sys.modules['sklearn.externals.joblib'] = joblib
 
 def load_data(database_filepath):
+    '''
+    load_data
+    Load data from SQL database and returns data as X(features), Y(labels) and category names
+
+    Input:
+    database_filepath   -> File path for SQL database
+
+    Output:
+    X                   -> Features 
+    Y                   -> Labels
+    category_names      -> Name for each label
+    '''
     engine = create_engine(f"sqlite:///{database_filepath}")
     df = pd.read_sql_table('DisasterResponse', engine)  
     
@@ -30,6 +42,17 @@ def load_data(database_filepath):
 
 
 def tokenize(text):
+    '''
+    tokenize
+    Tokenize input text into smaller units and lemmatize the different inflected forms of a word so they can be analyzed as a single item
+
+    Input:
+    text                -> Message as text
+
+    Output:
+    clean_tokens        -> Small units of words after tokenization and lemmatization
+    '''    
+
     tokenizer = RegexpTokenizer(r'\w+')
     lemmatizer = WordNetLemmatizer()
 
@@ -44,6 +67,17 @@ def tokenize(text):
 
 
 def build_model():
+    '''
+    build_model
+    Build a multioutput classifier model with GridSearchCV. The steps of building a model are wrapped in a pipeline.
+
+    Input:
+    None
+
+    Output:
+    cv              -> Instance of GridSearchCV 
+    '''    
+
     pipeline =  Pipeline([
                 ('vect', CountVectorizer(tokenizer=tokenize)),
                 ('tfidf', TfidfTransformer()),
@@ -59,6 +93,19 @@ def build_model():
 
 
 def evaluate_model(model, X_test, Y_test, category_names):
+    '''
+    evaluate_model
+    Evaluate the performance of best model found in GridSearchCV using test dataset imported from SQL database 
+
+    Input:
+    model           -> best model found in GridSearchCV
+    X_test          -> Features of train dataset
+    Y_test          -> Labels of train dataset
+    category_names  -> Name for each label
+
+    Output:
+    None
+    ''' 
     Y_pred = model.predict(X_test)
     Y_pred = pd.DataFrame(Y_pred, columns=category_names)
 
@@ -66,6 +113,17 @@ def evaluate_model(model, X_test, Y_test, category_names):
 
 
 def save_model(model, model_filepath):
+    '''
+    save_model
+    Save best model found in GridSearchCV in a given file path 
+
+    Input:
+    model           -> best model found in GridSearchCV
+    model_filepath  -> location where the model is saved
+
+    Output:
+    None
+    ''' 
     joblib.dump(model.best_estimator_, model_filepath)
 
 
